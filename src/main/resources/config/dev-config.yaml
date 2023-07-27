@@ -1,0 +1,24 @@
+#p-order-management-api
+http:
+  port: "8082"
+api:
+  id: "18196926"
+  
+#s-order-management-api
+s-order-management-api:
+  host: "s-order-management-api.us-e1.cloudhub.io"
+  port: "8081"
+  basePath: "/api"
+  path:   
+    orders: "/order"
+    customers: "/customers"
+    items: "/item"
+    
+json:
+  logger:
+    application:
+      name: "p-order-management-api"
+      version: "v1" 
+  
+    
+    

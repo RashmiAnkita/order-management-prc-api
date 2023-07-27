@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-test-suite.xml" />
+	<munit:test name="implementation-test-suite-post-orderTest" doc:id="bd694b06-41c7-4766-a15a-60cb28cae292" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking Create-orders" doc:id="7cc2f23b-6237-4b13-beae-b84ce3eba909" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b99a6ec7-5b9b-4866-bf1b-b5e6870f91a8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mocking Create-customers" doc:id="1b29acc4-c92e-4167-b6fa-19ba684956dd" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="be4e1d2c-af17-4320-ac13-2cf6ac27c31e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mocking Create-items" doc:id="f5e3d999-ed0f-48aa-aee5-d9e0ee3c3fcb" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf61bf31-6fdb-404a-9fcd-0dd5ee109f73" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="orderId" value="#[output application/json --- readUrl('classpath://processMunits\set-variable_orderId.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="5f9097f1-4d1a-495d-9b87-2b2fcb46e292" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://processMunits\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post-order" doc:id="6caf050d-df03-4cce-bffe-39fd83628b79" name="post-order"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verifing post-orders-flow-ends" doc:id="bb87d493-08dc-41d4-bed8-ac9a9535242f" processor="json-logger:logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ea5d8762-d68f-4233-80bd-1e2a6e4f88dc" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-ordersTest" doc:id="bfe9d8fb-6762-485b-8a34-54849fc10bbf" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking Request" doc:id="75eb09d0-271b-4602-ac11-22d8a380c1d7" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e67777b-194b-4b6e-9d61-3e471606bab7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="2168efc5-52ed-4468-a148-6b2b5ffc8770" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://processMunits\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to Create-orders" doc:id="72cb06d4-04aa-4019-9dc5-1a2e177981f4" name="Create-orders"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verifing Create-orders-flow-end" doc:id="aeb7bb35-3e3f-4878-b9d3-d087b25f0853" processor="json-logger:logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="076fcca5-d85b-4251-a339-bd437a3b144d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-customersTest" doc:id="ce07731b-d3a7-4c84-9413-f0874ef9ecaf" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking Request" doc:id="3eefcf83-01e8-418b-bca7-4c605042627a" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="41922e6e-7bfd-473b-ba62-fd6855c3158a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="4e87265a-b01c-4c6e-8a85-cc5b76a5981b" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://processMunits\set-event_payload.dwl')]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to Create-customers" doc:id="3161a215-2fe9-4d20-aab6-ed03c7b4f234" name="Create-customers"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verifing Create-customers-flow-end" doc:id="7760f1f0-28c5-4ef4-8080-ad386be4430a" processor="json-logger:logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="8c8055f1-69eb-4483-9d26-9f1371d860c1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-itemsTest" doc:id="352b58ec-4a23-4e06-a500-67275fef60cd" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking Request" doc:id="43e1bbb1-debf-4ff5-8890-3a966c23144c" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0acce1b7-c3b4-43d2-9a04-ebcfe1370e71" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="54b8fff2-c327-4fce-a0be-05aec544b9b5" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://processMunits\set-event_itemPayload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:variables >
+					<munit:variable key="orderId" value="#[output application/json --- readUrl('classpath://processMunits\set-variable_orderId.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="originalPayload" value="#[output application/json --- readUrl('classpath://processMUnits\set-variable_originalPayload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to Create-items" doc:id="725c1c7b-9c7c-46a4-bc3a-4be178ec9506" name="Create-items"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="0abd23c7-a113-45f8-8212-09dc86be0c70" message='#["Payload is null"]' expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:verify-call doc:name="Verifing Create-items-flow-end" doc:id="3b9d4c4d-1a9c-4427-9e80-0c389f024a4e" processor="json-logger:logger" atLeast="2">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ed653a82-ebdc-4b48-9fb6-95f08df03e71" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-orders-error-bad-request" doc:id="02505075-400b-4d7f-b91b-56947be37fbc" description="Test" expectedErrorType="APIKIT:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking apikit:router" doc:id="0cb4767b-6a52-42e3-ac2c-dad099c7e295" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="a1fa98ca-ac5c-40b7-bfa0-12546b11f408" name="p-order-management-api-main"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-orders-error-not-found" doc:id="75fe0791-e5a1-44a6-b30f-3abaf9231844" description="Test" expectedErrorType="APIKIT:NOT_FOUND" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking apikit:router" doc:id="446b8620-bca2-4644-8f07-acebcf1b6026" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="2dceb5cb-fff0-4685-b67b-a0e952df869b" name="p-order-management-api-main" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-orders-error-method-not-allowed" doc:id="d5a35998-44cc-4105-b255-0bac384144db" description="Test" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking apikit:router" doc:id="fcac4bb7-b528-4b34-b653-358fba2620a8" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="6cea000f-f051-4f60-9ac3-3cfa6b230580" name="p-order-management-api-main" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-orders-error-not-acceptable" doc:id="80f4bd74-bc03-4ea1-8056-657d0c2261b3" description="Test" expectedErrorType="APIKIT:NOT_ACCEPTABLE" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking apikit:router" doc:id="cd313060-0d87-4df5-b40b-31f6d06f9281" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="20f81081-0505-4b49-ac63-c76b5e1c6a05" name="p-order-management-api-main" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-orders-error-unsupported-media-type" doc:id="bc96829a-adb8-4ce4-8904-2c36ead22c93" description="Test" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking apikit:router" doc:id="042aaf00-de62-4a95-a9e3-81da11376a4a" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="17c9956f-dc89-45ef-acf3-a828b965b419" name="p-order-management-api-main" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-orders-error-not-implemented" doc:id="83e78b7f-1946-4337-9793-02d4fb5fc0ec" description="Test" expectedErrorType="APIKIT:NOT_IMPLEMENTED" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking apikit:router" doc:id="ed5f3aca-bac4-4da7-b736-d26e62de619a" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="80ad45d2-d5d1-4122-ab41-02903a191fa5" name="p-order-management-api-main" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="implementation-test-suite-Create-orders-error-any" doc:id="61c903f2-f683-4831-9c03-d5c2da12acb7" description="Test" expectedErrorType="ANY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking apikit:router" doc:id="725c4a5f-4399-4209-92cb-a037dcd7b93b" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="f0725365-6767-4494-83bf-4ba38103da27" name="p-order-management-api-main" />
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

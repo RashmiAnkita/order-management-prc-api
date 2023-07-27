@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="p-order-management-api-test-suite.xml" />
+	<munit:test name="p-order-management-api-test-suite-p-order-management-api-mainTest" doc:id="6e63e5b0-bae8-45fe-b1d1-b43abf65e8df" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking APIkit Router" doc:id="4ac8517e-aa03-412d-8ade-85e2dbf54906" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="0ce6d8dd-4354-4eb5-ada6-3b3c0cb708bf" name="p-order-management-api-main"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="p-order-management-api-test-suite-post:\orders:application\json:p-order-management-api-configTest" doc:id="9c1d6c81-fa56-469c-abd6-f2563904d625" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking Create-Order-Customer-Item" doc:id="e11beeea-1fc6-47b8-a096-31bc8ad093c2" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d4417e58-0792-4f6d-9b97-b224794797fb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\orders:application\json:p-order-management-api-config" doc:id="17231660-3f7a-47a0-9843-0dd8008a7f1d" name="post:\orders:application\json:p-order-management-api-config"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

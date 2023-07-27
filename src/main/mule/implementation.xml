@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<flow name="post-order" doc:id="7c749a8f-940c-4d2f-a545-5b2a1e9baa52" >
+		<json-logger:logger doc:name="post-orders-flow-starts" doc:id="ac1da135-61b8-4b72-a599-29a6b25fd497" config-ref="JSON_Logger_Config" message='#["Flow Starts = " ++ flow.name]'>
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="originalPayload" doc:id="b4d708a7-e7f8-4a0d-9c3e-ddc221f41084">
+			<ee:message>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalPayload" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Create-orders" doc:id="b99a6ec7-5b9b-4866-bf1b-b5e6870f91a8" name="Create-orders"/>
+		<flow-ref doc:name="Create-customers" doc:id="be4e1d2c-af17-4320-ac13-2cf6ac27c31e" name="Create-customers" />
+		<flow-ref doc:name="Create-items" doc:id="cf61bf31-6fdb-404a-9fcd-0dd5ee109f73" name="Create-items" />
+		<ee:transform doc:name="Transform Message" doc:id="576a512c-a387-4204-ae51-c0a6f3c5c2a7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Order has been created successfully!!",
+	"order_id": vars.orderId joinBy ""
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="post-orders-flow-ends" doc:id="ea5d8762-d68f-4233-80bd-1e2a6e4f88dc" config-ref="JSON_Logger_Config" message='#["Flow Ends = " ++ flow.name]' tracePoint="END">
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+	</flow>
+	<flow name="Create-orders" doc:id="89899f76-fab0-4e2f-9d5b-bbde677a8d72" >
+		<json-logger:logger doc:name="Create-orders-flow-start" doc:id="ebf50716-f377-4540-b483-6a9e7eeab3d2" config-ref="JSON_Logger_Config" message='#["Flow Starts = " ++ flow.name]' tracePoint="BEFORE_TRANSFORM">
+			<json-logger:content ><![CDATA[Create-orders-flow-start]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Create Orders" doc:id="9513a771-4093-4f99-b5dc-834c2bf64536">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload.order]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="7e67777b-194b-4b6e-9d61-3e471606bab7" config-ref="HTTP_Request_configuration" path="${s-order-management-api.path.orders}">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	 client_id: p("secure::s-order-management-api.clientId"),
+	 client_secret: p("secure::s-order-management-api.clientSecret") 
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="2da8abbb-50ed-4db2-9d3c-b20a0281bb8e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload.order_id]" doc:name="Order_id" doc:id="2e86935c-bbd8-485a-ae9a-2d3088e32483" variableName="orderId" />
+		<json-logger:logger doc:name="Create-orders-flow-end" doc:id="076fcca5-d85b-4251-a339-bd437a3b144d" config-ref="JSON_Logger_Config" message='#["Flow Ends = " ++ flow.name]' tracePoint="AFTER_REQUEST">
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+	</flow>
+	<flow name="Create-customers" doc:id="66271cc5-8235-4377-a0cd-b69fcee20595" >
+		<json-logger:logger doc:name="Create-customers-flow-start" doc:id="9d2be764-59ca-4eb2-b775-d04c5a075c1b" config-ref="JSON_Logger_Config" message='#["Flow Starts = " ++ flow.name]' tracePoint="BEFORE_TRANSFORM">
+			<json-logger:content ><![CDATA[Create-customers-flow-start]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="Create Customers" doc:id="31453671-de5a-43ff-a468-a0c49cc32003" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"firstName": vars.originalPayload.customer.firstName,
+    "lastName": vars.originalPayload.customer.lastName,
+    "address": vars.originalPayload.customer.address,
+    "orderId": vars.orderId
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="41922e6e-7bfd-473b-ba62-fd6855c3158a" config-ref="HTTP_Request_configuration" path="${s-order-management-api.path.customers}">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	 client_id: p("secure::s-order-management-api.clientId"),
+	 client_secret: p("secure::s-order-management-api.clientSecret") 
+}]]]></http:headers>
+		</http:request>
+		<json-logger:logger doc:name="Create-customers-flow-end" doc:id="8c8055f1-69eb-4483-9d26-9f1371d860c1" config-ref="JSON_Logger_Config" message='#["Flow Ends = " ++ flow.name]' tracePoint="AFTER_REQUEST">
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+	</flow>
+	<flow name="Create-items" doc:id="666d8626-b739-4a27-a71c-0d156309388f" >
+		<json-logger:logger doc:name="Create-items-flow-start" doc:id="393e3d70-d6c4-405b-8ec3-d99df27d5d01" config-ref="JSON_Logger_Config" message='#["Flow Starts = " ++ flow.name]' tracePoint="BEFORE_TRANSFORM">
+			<json-logger:content ><![CDATA[Create-items-flow-start]]></json-logger:content>
+		</json-logger:logger>
+		<foreach doc:name="For Each" doc:id="474c7fc0-0a7d-4cdf-94be-1ab5e8caa926" collection="#[vars.originalPayload.items]">
+			<ee:transform doc:name="Create Items" doc:id="b25a872d-6a14-4c4f-8e72-e3eee43418d2">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"id": payload.id,
+    "category": payload.category,
+    "quantity": payload.quantity,
+    "size": payload.size,
+    "orderId":vars.orderId
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			<http:request method="POST" doc:name="Request" doc:id="0acce1b7-c3b4-43d2-9a04-ebcfe1370e71" config-ref="HTTP_Request_configuration" path="${s-order-management-api.path.items}">
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	 client_id: p("secure::s-order-management-api.clientId"),
+	 client_secret: p("secure::s-order-management-api.clientSecret") 
+}]]]></http:headers>
+			</http:request>
+			<json-logger:logger doc:name="Create-items-flow-end" doc:id="ed653a82-ebdc-4b48-9fb6-95f08df03e71" config-ref="JSON_Logger_Config" message='#["Flow Ends = " ++ flow.name]' tracePoint="AFTER_REQUEST">
+				<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+			</json-logger:logger>
+		</foreach>
+	</flow>
+</mule>

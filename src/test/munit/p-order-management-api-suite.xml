@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="p-order-management-api-suite.xml" />
+	<munit:test name="post:\orders:application\json:p-order-management-api-config-test" doc:id="2f110769-d712-499f-a950-4df4ae43a442" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Create-Order-Customer-Item" doc:id="7e1ef77a-e0f4-4bb6-8064-8ab29fe16e84" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d4417e58-0792-4f6d-9b97-b224794797fb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="orderId" value="#[output application/json --- readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="originalPayload" value="#[output application/json --- readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\mock_variable_2.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="e71d2755-7178-435b-9708-8d05d25d48b3" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://postordersapplicationjsonpordermanagementapiconfigtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\orders:application\json:p-order-management-api-config" doc:id="0ca71f24-61e6-42c8-bf3f-5a72f8d7ff10" name="post:\orders:application\json:p-order-management-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="73d1bfc9-0f83-4d9a-b373-47a1402648f1" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import postordersapplicationjsonpordermanagementapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="p-order-management-api-main-test" doc:id="3340baa0-d79d-4ebb-a40f-702de89da55d" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="c5e713f4-cc90-4a6e-b7b6-9532798be300" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1eef13b6-8f06-4eb5-97d6-471141941079" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://pordermanagementapimaintest\mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://pordermanagementapimaintest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://pordermanagementapimaintest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="orderId" value="#[output application/json --- readUrl('classpath://pordermanagementapimaintest\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://pordermanagementapimaintest\mock_variable_2.dwl')]" />
+						<munit-tools:variable key="originalPayload" value="#[output application/json --- readUrl('classpath://pordermanagementapimaintest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="cae21406-9a09-4afb-94fd-d7e62328cf9e" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://pordermanagementapimaintest\set-event_payload1.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://pordermanagementapimaintest\set-event_attributes1.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to p-order-management-api-main" doc:id="bfb8b43e-178c-4648-9c0a-c41238b24e74" name="p-order-management-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="ee830d59-9f24-4f65-b3b5-dca9388fd331" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import pordermanagementapimaintest::assert_expression_payload1
+---
+assert_expression_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
